@@ -90,17 +90,22 @@ function confirmarVoto() {
         });
 
         // Deshabilitar el botón de confirmar
-        const confirmButton = document.getElementById("confirm-button");
-        confirmButton.disabled = true;
+const confirmButton = document.getElementById("confirm-button");
+confirmButton.disabled = true;
 
-        // Mostrar el mensaje de agradecimiento
-        const confirmacion = document.getElementById("confirmacion");
-        confirmacion.style.display = "block";      
+// Mostrar el mensaje de agradecimiento
+const confirmacion = document.getElementById("confirmacion");
+confirmacion.style.display = "block";
 
-        // Redirigir al usuario a "agradecimiento.html" después de unos segundos
-        setTimeout(() => {
-         document.body.classList.add("invisible");
-        }, 3000); // Redirección después de 3 segundos (ajusta este valor según tu preferencia)
+// Ocultar el contenido de la página después de confirmar el voto
+const mainContent = document.querySelector("main");
+mainContent.style.display = "none";
+
+// Redirigir al usuario a "agradecimiento.html" después de unos segundos
+setTimeout(() => {
+    // Cerrar la pestaña después de confirmar el voto
+window.close();
+}, 3000); // Redirección después de 3 segundos (ajusta este valor según tu preferencia)
     }
 }
 
