@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Solteros FC Votación 2023</title>
+</head>
+<body>
+    <header>
+        <h1>Solteros FC Votación 2023</h1>
+    </header>
+    <main>
+      <span id="mensajeVotado" style="display: none;">⚠️ Usted YA VOTO ⚠️</span>
+      <button id="login" class="custom-button">Iniciar sesión con Google</button>
+      <button id="btnvote" class="custom-button" style="display: none;" >Votar</button>
+    </main>
+</body> 
+
+
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-analytics.js";
+    import { getAuth, GoogleAuthProvider, signInWithRedirect, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDRsX2uV4AmLzL9X_NDOx7uInf0JkiE1ow",
+      authDomain: "votacion-solterosfc.firebaseapp.com",
+      projectId: "votacion-solterosfc",
+      storageBucket: "votacion-solterosfc.appspot.com",
+      messagingSenderId: "643617583545",
+      appId: "1:643617583545:web:116e2b27899e8a89708668",
+      measurementId: "G-MYPQ60SQ90"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const provider = new GoogleAuthProvider(app);
+    const auth = getAuth(app);
+
+    const loginButton = document.getElementById("login");
+    const voteButton = document.getElementById("btnvote");
+
+
+
+    loginButton.addEventListener("click", (e) => {
+        signInWithRedirect(auth, provider);
+
+        getRedirectResult(auth)
+  .then((result) => {
+    // This gives you a Google Access Token. You can use it to access Google APIs.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+
+    // The signed-in user info.
+    const user = result.user;
+ 
+    // IdP data available using getAdditionalUserInfo(result)
+  })
+  .catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    // ...
+  });
+    })
+    
+    // Detecta el cambio de estado de autenticación
+    onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Si hay un usuario autenticado, muestra el botón de votar y oculta el de iniciar sesión
+                voteButton.style.display = "block";
+                loginButton.style.display = "none";
+            } else {
+                // Si no hay un usuario autenticado, muestra el botón de iniciar sesión y oculta el de votar
+                voteButton.style.display = "none";
+                loginButton.style.display = "block";
+            }
+        });
+</script>
+<script>
+  const btnVote = document.getElementById('btnvote');
+  
+  btnVote.addEventListener('click', function() {
+    window.location.href = 'opciones.html';
+  });
+</script>
+
+</html>

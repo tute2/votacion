@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Partidos Políticos Solteros 2023</title>
+    <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase.js"></script>
+
+</head>
+<body>
+    <header>
+        <h1>Partidos Políticos Solteros 2023</h1>
+    </header>
+    <main>
+        <section class="party" id="partido1">
+            <img src="IMG-PARTIDO1.JPG" alt="Partido 1">
+            <h2>Juntos x el Cambio</h2>
+        </section>
+        <section class="party" id="partido2">
+            <img src="IMG-PARTIDO2.JPG" alt="Partido 2">
+            <h2>Hacemos x Nuestro País</h2>
+        </section>
+        <section class="party" id="partido3">
+            <img src="IMG-PARTIDO3.JPG" alt="Partido 3">
+            <h2>Frente de Izquierda</h2>
+        </section>
+        <section class="party" id="partido4">
+            <img src="IMG-PARTIDO4.JPG" alt="Partido 4">
+            <h2>Union x las Bajas</h2>
+        </section>
+        <section class="party" id="partido5">
+            <img src="IMG-PARTIDO5.JPG" alt="Partido 5">
+            <h2>Los Rugbiers</h2>
+        </section>
+    </main>
+    <span id="confirmacion" style="display: none;">Gracias por tu voto.</span>
+    <button id="confirm-button" disabled onclick="confirmarVoto()">Confirmar Voto</button>
+
+
+    <script src="firebase.js"></script>
+    <script src="index.html"></script>
+
+
+
+<!----------------------------------------------PROCESO DE ALMACENAMIENTO DE VOTOS--------------------------------------------------->
+    <script>
+var firebaseConfig = {
+    aapiKey: "AIzaSyDRsX2uV4AmLzL9X_NDOx7uInf0JkiE1ow",
+    authDomain: "votacion-solterosfc.firebaseapp.com",
+    databaseURL: "https://votacion-solterosfc-default-rtdb.firebaseio.com",
+    projectId: "votacion-solterosfc",
+    storageBucket: "votacion-solterosfc.appspot.com",
+    messagingSenderId: "643617583545",
+    appId: "1:643617583545:web:116e2b27899e8a89708668"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+// Database reference 
+var firebaseRef = firebase.database().ref();
+
+// Agregar un evento click a cada partido
+document.querySelectorAll('.party').forEach((party) => {
+    party.addEventListener('click', function() {
+        // Remover la clase 'selected' de todos los partidos
+        document.querySelectorAll('.party').forEach((p) => p.classList.remove('selected'));
+        // Agregar la clase 'selected' al partido seleccionado
+        party.classList.add('selected');
+    });
+});
+
+// Función para confirmar el voto
+function confirmarVoto() {
+    // Buscar el partido seleccionado (el que tiene la clase 'selected')
+    const partidoSeleccionado = document.querySelector('.party.selected');
+
+    if (partidoSeleccionado) {
+        // Obtener el nombre del partido seleccionado
+        const nombrePartido = partidoSeleccionado.querySelector('h2').textContent;
+
+        // Actualizar el número de votos en la base de datos de Firebase
+        const database = firebase.database();
+        const partidoRef = database.ref(nombrePartido);
+
+        // Incrementar el contador de votos en 1
+        partidoRef.transaction((currentVotes) => {
+            return (currentVotes || 0) + 1;
+        });
+
+        // Deshabilitar el botón de confirmar
+        const confirmButton = document.getElementById("confirm-button");
+        confirmButton.disabled = true;
+
+        // Mostrar el mensaje de agradecimiento
+        const confirmacion = document.getElementById("confirmacion");
+        confirmacion.style.display = "block";      
+
+        // Redirigir al usuario a "agradecimiento.html" después de unos segundos
+        setTimeout(() => {
+         document.body.classList.add("invisible");
+        }, 3000); // Redirección después de 3 segundos (ajusta este valor según tu preferencia)
+    }
+}
+
+</script>
+
+<script type="module">
+    document.addEventListener("DOMContentLoaded", function () {
+    const partyOptions = document.querySelectorAll(".party");
+    const confirmButton = document.getElementById("confirm-button");
+
+    partyOptions.forEach(function (partyOption) {
+        partyOption.addEventListener("click", function () {
+            // Cuando se hace clic en un partido, habilita el botón de confirmar
+            confirmButton.removeAttribute("disabled");
+        });
+    });
+});
+
+</script>
+</body>
+</html>
+
